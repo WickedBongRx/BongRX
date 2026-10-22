@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bong Rx - Quick DIY Glassware & Smoking Device Repair</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                            accent: '#10b981',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
+                        },
+                        dark: {
+                            bg: '#0a0d0f',
+                            card: 'rgba(18, 24, 27, 0.75)',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            hover: 'rgba(255, 255, 255, 0.04)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0d0f;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(18, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel-glow {
+            background: rgba(18, 24, 27, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            box-shadow: 0 0 25px -5px rgba(34, 197, 94, 0.15);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1214;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Scanline effect for simulated upload processing */
+        @keyframes scan {
+            0% { top: 0%; opacity: 0.8; }
+            50% { opacity: 0.4; }
+            100% { top: 100%; opacity: 0.8; }
+        }
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4ade80, transparent);
+            box-shadow: 0 0 10px #4ade80;
+            animation: scan 2s infinite ease-in-out;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .glass-panel, .glass-panel-glow {
+                background: none !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- TOP NOTICE / DISCLAIMER BANNER -->
+    <header class="no-print bg-amber-950/70 border-b border-amber-500/30 text-amber-200 text-xs sm:text-sm py-2.5 px-4 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid font-bold fa-triangle-exclamation text-amber-400 text-base shrink-0 animate-pulse"></i>
+                <p class="leading-tight">
+                    <strong class="font-semibold text-amber-300">SAFETY FIRST:</strong> Never expose glues, tapes, epoxy, or plastics to direct flame or hot airpaths! Inhaling toxic fumes can cause severe lung damage. Use non-toxic, heat-safe materials only.
+                </p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="text-amber-400/70 hover:text-amber-200 text-xs shrink-0 ml-2">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN NAVBAR -->
+    <nav class="no-print border-b border-white/10 glass-panel py-3.5 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-bong text-slate-950 text-xl font-bold"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        Bong <span class="text-brand-400">Rx</span>
+                        <span class="text-[10px] font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider">DIY Lab</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Quick DIY repairs & budget hacks for broken glassware</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="flex items-center bg-slate-900/80 p-1 rounded-xl border border-white/5 text-xs font-medium w-full sm:w-auto justify-center">
+                <button onclick="switchTab('diagnostic')" id="tab-btn-diagnostic" class="nav-tab px-4 py-2 rounded-lg text-white bg-brand-600 font-semibold transition-all shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-wrench text-xs"></i> Repair Clinic
+                </button>
+                <button onclick="switchTab('safety')" id="tab-btn-safety" class="nav-tab px-4 py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-xs"></i> Household Safety Matrix
+                </button>
+                <button onclick="switchTab('saved')" id="tab-btn-saved" class="nav-tab px-4 py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-bookmark text-xs"></i> Saved Guides (<span id="saved-count">0</span>)
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN BODY CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- TAB 1: DIAGNOSTIC & REPAIR ENGINE -->
+        <section id="tab-diagnostic" class="space-y-8">
+            
+            <!-- Hero / Instruction Box -->
+            <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 relative overflow-hidden">
+                <div class="max-w-3xl relative z-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-brand-500/10 text-brand-400 border border-brand-500/20 mb-3">
+                        <i class="fa-solid fa-bolt text-xs"></i> Instant Glass Triage
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">Diagnose & Fix Your Piece Without Breaking the Bank</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Don't throw away a $100 piece over a broken downstem or a hairline base crack. Upload a photo or select your break type to find immediate, safe household fixes and budget hardware hacks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- WORKFLOW GRID: INPUT (LEFT) VS SOLUTION (RIGHT) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- LEFT PANEL: Upload & Damage Profiler (5 cols) -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="glass-panel rounded-2xl p-6 border border-white/10 shadow-xl space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 text-xs flex items-center justify-center font-bold">1</span>
+                                Damage Analysis
+                            </h3>
+                            <button onclick="resetProfiler()" class="text-xs text-slate-400 hover:text-brand-400 transition-colors">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Reset
+                            </button>
+                        </div>
+
+                        <!-- PHOTO UPLOADER DROPZONE -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Upload Photo of Damage (Optional)</label>
+                            <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
+                                 class="border-2 border-dashed border-slate-700 hover:border-brand-500/60 bg-slate-900/50 hover:bg-slate-900/80 rounded-xl p-5 text-center cursor-pointer transition-all relative overflow-hidden group">
+                                <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                                
+                                <div id="upload-prompt" class="space-y-2">
+                                    <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto text-slate-400 group-hover:scale-110 group-hover:text-brand-400 transition-all">
+                                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+                                    </div>
+                                    <p class="text-xs font-medium text-slate-300">Drop your photo here, or <span class="text-brand-400 underline">browse</span></p>
+                                    <p class="text-[10px] text-slate-500">Supports JPG, PNG, WEBP (Simulated visual inspection)</p>
+                                </div>
+
+                                <!-- PREVIEW STATE -->
+                                <div id="upload-preview" class="hidden relative">
+                                    <img id="preview-img" src="" alt="Break preview" class="max-h-48 rounded-lg mx-auto object-cover w-full border border-white/10">
+                                    <div id="scanner-bar" class="hidden scanner-line"></div>
+                                    <div class="mt-2 flex items-center justify-between text-xs text-slate-400 px-1">
+                                        <span id="file-name-txt" class="truncate max-w-[180px]">image.jpg</span>
+                                        <span class="text-brand-400 font-medium flex items-center gap-1">
+                                            <i class="fa-solid fa-check text-xs"></i> Visual Match Active
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CATEGORY / BREAK LOCATION BUTTONS -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2.5">Break Location / Problem Type</label>
+                            <div class="grid grid-cols-2 gap-2" id="category-selector">
+                                <button type="button" onclick="selectCategory('downstem')" data-cat="downstem" class="cat-btn p-3 rounded-xl border border-white/5 bg-slate-900/60 text-left hover:border-brand-500/40 transition-all">
+                                    <i class="fa-solid fa-vial text-brand-400 mb-1 text-sm block"></i>
+                                    <span class="text-xs font-medium text-white block">Broken Downstem / Joint</span>
+                                    <span class="text-[10px] text-slate-400">Snapped, stuck, cracked</span>
+                                </button>
+                                <button type="button" onclick="selectCategory('base')" data-cat="base" class="cat-btn p-3 rounded-xl border border-white/5 bg-slate-900/60 text-left hover:border-brand-500/40 transition-all">
+                                    <i class="fa-solid fa-flask text-brand-400 mb-1 text-sm block"></i>
+                                    <span class="text-xs font-medium text-white block">Cracked Base / Body</span>
+                                    <span class="text-[10px] text-slate-400">Leaking chamber, hairine</span>
+                                </button>
+                                <button type="button" onclick="selectCategory('bowl')" data-cat="bowl" class="cat-btn p-3 rounded-xl border border-white/5 bg-slate-900/60 text-left hover:border-brand-500/40 transition-all">
+                                    <i class="fa-solid fa-fire text-brand-400 mb-1 text-sm block"></i>
+                                    <span class="text-xs font-medium text-white block">Bowl Piece / Slide</span>
+                                    <span class="text-[10px] text-slate-400">Chip, handle snapped</span>
+                                </button>
+                                <button type="button" onclick="selectCategory('grommet')" data-cat="grommet" class="cat-btn p-3 rounded-xl border border-white/5 bg-slate-900/60 text-left hover:border-brand-500/40 transition-all">
+                                    <i class="fa-solid fa-ring text-brand-400 mb-1 text-sm block"></i>
+                                    <span class="text-xs font-medium text-white block">Leaking Seal / Grommet</span>
+                                    <span class="text-[10px] text-slate-400">Loose airseal, missing rubber</span>
+                                </button>
+                                <button type="button" onclick="selectCategory('mouthpiece')" data-cat="mouthpiece" class="cat-btn p-3 rounded-xl border border-white/5 bg-slate-900/60 text-left hover:border-brand-500/40 transition-all">
+                                    <i class="fa-solid fa-lips text-brand-400 mb-1 text-sm block"></i>
+                                    <span class="text-xs font-medium text-white block">Chipped Mouthpiece</span>
+                                    <span class="text-[10px] text-slate-400">Sharp edge, cracked lip</span>
+                                </button>
+                                <button type="button" onclick="selectCategory('perc')" data-cat="perc" class="cat-btn p-3 rounded-xl border border-white/5 bg-slate-900/60 text-left hover:border-brand-500/40 transition-all">
+                                    <i class="fa-solid fa-cubes-stacked text-brand-400 mb-1 text-sm block"></i>
+                                    <span class="text-xs font-medium text-white block">Ash Catcher / Perc</span>
+                                    <span class="text-[10px] text-slate-400">Internal tree break, joint</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- MATERIAL SELECTOR -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="material-select" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Piece Material</label>
+                                <select id="material-select" onchange="triggerDiagnosis()" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                    <option value="borosilicate" selected>Borosilicate Glass (Standard Glassware)</option>
+                                    <option value="clear_glass">Soft / Thin Clear Glass</option>
+                                    <option value="silicone">Silicone Body</option>
+                                    <option value="ceramic">Ceramic / Clay</option>
+                                    <option value="acrylic">Acrylic / Hard Plastic</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="severity-select" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Damage Severity</label>
+                                <select id="severity-select" onchange="triggerDiagnosis()" class="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                    <option value="clean_snap">Clean Break / 2 Sharp Pieces</option>
+                                    <option value="hairline_crack" selected>Hairline Crack (Leaking water/air)</option>
+                                    <option value="shattered">Shattered / Missing Fragments</option>
+                                    <option value="stuck_joint">Stuck / Jammed Joint</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- SEARCH FILTER -->
+                        <div>
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                                <input type="text" id="recipe-search" onkeyup="filterRecipesByKeyword()" placeholder="Search fixes by keyword (e.g., epoxy, wax, tape)..." class="w-full bg-slate-900 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT PANEL: DIAGNOSTIC RESULTS & REPAIR RECIPES (7 cols) -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div id="results-container" class="space-y-6">
+                        <!-- Dynamic repair recommendations will render here -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 2: HOUSEHOLD SAFETY & MATERIALS MATRIX -->
+        <section id="tab-safety" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 border border-white/10 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-brand-400"></i> Household Materials Safety Reference
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">
+                            Before using household glues or items, verify their heat tolerance and non-toxic status.
+                        </p>
+                    </div>
+                    <!-- Quick Filter Search -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-filter absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                        <input type="text" id="safety-search" onkeyup="filterSafetyMatrix()" placeholder="Filter materials..." class="w-full bg-slate-900 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- LEGEND -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                    <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span class="text-xs text-emerald-200 font-medium">DIRECT HEAT SAFE</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30 flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-amber-500 shrink-0"></span>
+                        <span class="text-xs text-amber-200 font-medium">OUTER BODY / WATER CHAMBER ONLY</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-rose-500 shrink-0"></span>
+                        <span class="text-xs text-rose-200 font-medium">NEVER USE (TOXIC FUMES)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLE OF MATERIALS -->
+            <div class="glass-panel rounded-2xl overflow-hidden border border-white/10">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/90 border-b border-white/10 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <th class="p-4">Material / Adhesive</th>
+                                <th class="p-4">Safety Zone Rating</th>
+                                <th class="p-4">Max Temp Limit</th>
+                                <th class="p-4">Common Usage & Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="safety-matrix-body" class="divide-y divide-white/5 text-xs text-slate-300">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SAVED GUIDES -->
+        <section id="tab-saved" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 border border-white/10 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bookmark text-brand-400"></i> Your Saved Repair Recipes
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Access your bookmarked DIY fixes anytime or prepare them for printing.</p>
+                </div>
+                <button onclick="clearSavedRecipes()" id="clear-all-saved-btn" class="hidden text-xs text-rose-400 hover:text-rose-300 border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 rounded-lg transition-colors">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Clear All
+                </button>
+            </div>
+
+            <div id="saved-recipes-list" class="space-y-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="no-print border-t border-white/10 glass-panel py-6 px-4 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bong text-brand-400"></i>
+                <span class="font-bold text-slate-300">Bong Rx</span> &copy; 2026. For Harm Reduction & Educational DIY Use Only.
+            </div>
+            <p class="max-w-md text-center sm:text-right">
+                Always prioritize non-toxic materials. If glass is broken in high-heat zones (bowl interior), replacement is always recommended over repairs.
+            </p>
+        </div>
+    </footer>
+
+    <!-- PRINT VIEW HEADER (HIDDEN UNLESS PRINTING) -->
+    <div class="hidden print-only p-8 text-black">
+        <h1 class="text-3xl font-bold mb-2">Bong Rx - DIY Glassware Repair Guide</h1>
+        <p class="text-sm mb-4">Generated from Bong Rx DIY Repair Assistant</p>
+        <hr class="mb-6 border-black">
+    </div>
+
+    <!-- SCRIPT APPLICATION LOGIC -->
+    <script>
+        // MASTER DATABASE OF REPAIR RECIPES
+        const REPAIR_DATABASE = [
+            {
+                id: 'downstem-silicone-sleeve',
+                category: 'downstem',
+                title: 'Food-Grade Silicone Tubing Downstem Sleeve',
+                subtitle: 'Fix snapped or cracked glass downstems using cheap tubing',
+                materials: ['Food-Grade Silicone Tubing (1/2" or 5/8" ID)', 'Razor Blade / Scissors', 'Rubbing Alcohol (for cleanup)', 'Sandpaper or Glass File'],
+                costEstimate: '$2 - $5',
+                timeEstimate: '10 Mins',
+                difficulty: 'Beginner Friendly',
+                heatZone: 'Medium / Outer Airpath',
+                safetyRating: 'SAFE_AIRPATH', // SAFE_AIRPATH, SAFE_EXTERIOR, UNSAFE
+                description: 'When downstems break clean across the tube, glass glues often fail due to moisture and pressure. Slipping a food-grade silicone tube over the joint creates a flexible, airtight, 100% heat-safe bridge.',
+                steps: [
+                    'Safely remove downstem fragments. File down any razor-sharp glass edges with sandpaper under dripping water (prevents inhaling glass dust).',
+                    'Thoroughly clean glass pieces with rubbing alcohol and let dry.',
+                    'Cut a 2-inch segment of food-grade silicone tubing.',
+                    'Lubricate the outer rim of glass downstem pieces with a drop of water.',
+                    'Firmly slide the silicone sleeve halfway over both broken halves until they meet snugly in the center.',
+                    'Test seal by gently drawing air through. Silicone holds high heat and resists water completely.'
+                ],
+                dosAndDonts: {
+                    dos: ['Use ONLY food-grade or high-temp platinum cured silicone.', 'File sharp glass corners first to avoid slicing through the tubing.'],
+                    donts: ['Do NOT use standard industrial PVC tubing or plastic straws (toxic fumes).', 'Do NOT apply flame directly to the silicone joint.']
+                },
+                budgetHack: 'Buy 1 foot of food-grade silicone tubing at local hardware store or homebrew shop for $1.50 instead of $20 replacement downstem.',
+                materialCompatibility: ['borosilicate', 'clear_glass', 'acrylic']
+            },
+            {
+                id: 'base-epoxy-seal',
+                category: 'base',
+                title: 'Two-Part Epoxy Glass Base Armor Repair',
+                subtitle: 'Reinforce hairline base cracks and stop water leaks permanently',
+                materials: ['Clear 2-Part Epoxy (Gorilla or JB Weld Glass)', 'Masking Tape / Painter Tape', 'Rubbing Alcohol', 'Popsicle Stick for mixing'],
+                costEstimate: '$4 - $7',
+                timeEstimate: '20 Mins + 24hr Cure',
+                difficulty: 'Easy',
+                heatZone: 'Cold / External Water Chamber',
+                safetyRating: 'SAFE_EXTERIOR',
+                description: 'Base cracks leak water onto tables and weaken structural integrity. Since the base remains cold and never touches smoke or flame, 2-part epoxy creates a bulletproof external patch.',
+                steps: [
+                    'Empty all water and dry the piece inside and out for at least 3 hours.',
+                    'Clean the exterior crack thoroughly with 91% Isopropyl alcohol to remove resin and grease.',
+                    'Mix equal parts resin and hardener on a disposable piece of cardboard.',
+                    'Apply a generous layer of epoxy OVER THE EXTERIOR of the crack (extend 1/2 inch beyond crack edges).',
+                    'Use masking tape to keep epoxy from running while curing if needed.',
+                    'Allow to cure uninterrupted for 24 hours before filling with water.'
+                ],
+                dosAndDonts: {
+                    dos: ['Apply epoxy strictly to the EXTERIOR surface.', 'Let cure a full 24 hours for maximum strength.'],
+                    donts: ['NEVER apply epoxy inside the smoke airpath or bowl area.', 'Do NOT rush cure time using a flame or lighter.']
+                },
+                budgetHack: 'Use standard $3 hardware store epoxy instead of specialized "glass repair kit" marking up to $25.',
+                materialCompatibility: ['borosilicate', 'clear_glass', 'ceramic']
+            },
+            {
+                id: 'grommet-hardware-hack',
+                category: 'grommet',
+                title: 'Hardware Store Rubber O-Ring / Grommet Upgrade',
+                subtitle: 'Replace loose, leaking, or dry-rotted rubber downstem seals',
+                materials: ['1/2" or 3/8" Nitrile / Rubber O-Rings or Hardware Grommet', 'Plumber PTFE Thread Tape (Teflon Tape)'],
+                costEstimate: '$0.50 - $2',
+                timeEstimate: '5 Mins',
+                difficulty: 'Beginner Friendly',
+                heatZone: 'Low Heat Zone',
+                safetyRating: 'SAFE_EXTERIOR',
+                description: 'Classic rubber-grommet bongs frequently leak air when seals rot or stretch. Hardware plumbing sections stock identical food-grade rubber seals for cents.',
+                steps: [
+                    'Remove old, cracked grommet and clean glass rim.',
+                    'If the hole is slightly oversized, wrap 3-4 layers of PTFE plumber tape around the neck of the glass insertion point.',
+                    'Press the new rubber O-ring or hardware grommet into the joint hole.',
+                    'Twist the downstem into place with light pressure for a suction-tight seal.'
+                ],
+                dosAndDonts: {
+                    dos: ['Use PTFE Teflon plumbers tape for tight custom shimming.', 'Keep spare O-rings in your repair drawer.'],
+                    donts: ['Do NOT use standard electrical tape or duct tape (sticky residue dissolves in water).', 'Avoid petroleum jelly as lubricant (degrades rubber).']
+                },
+                budgetHack: 'Hardware store plumbing O-rings cost $0.35 each vs $5+ online headshop specialty parts.',
+                materialCompatibility: ['borosilicate', 'clear_glass', 'acrylic', 'silicone']
+            },
+            {
+                id: 'bowl-handle-hempwrap',
+                category: 'bowl',
+                title: 'Hemp Wick & Organic Beeswax Handle Wrap',
+                subtitle: 'Fix broken slide handles and heat-shield hot bowl pieces',
+                materials: ['Organic Hemp Wick with Beeswax coating', 'Super Glue (for EXTERIOR anchor point only)', 'Scissors'],
+                costEstimate: '$1 - $3',
+                timeEstimate: '10 Mins',
+                difficulty: 'Beginner Friendly',
+                heatZone: 'Exterior Bowl Rim',
+                safetyRating: 'SAFE_EXTERIOR',
+                description: 'When the glass handle tab on a slide snaps off, pulling hot bowls becomes painful. Tight-wrapping organic hemp wick creates a rustic, heat-proof grip tab.',
+                steps: [
+                    'Clean the exterior slide wall with alcohol.',
+                    'Apply one tiny drop of superglue to the far outer glass rim (away from bowl lip) to anchor the start of the hemp wick.',
+                    'Tightly wrap hemp wick in a thick layer around the slide collar 15-20 times, building a textured grip knob.',
+                    'Tuck the tag end beneath the previous coil and trim tight.',
+                    'The natural beeswax seals the wrap into a solid, heat-resistant handle.'
+                ],
+                dosAndDonts: {
+                    dos: ['Keep wrap on the outer neck area below the bowl rim.', 'Use thick hemp wick for comfortable grip.'],
+                    donts: ['Do NOT use synthetic plastic string, yarn, or rubber bands near bowl.', 'Never glue inside the herb bowl cup!']
+                },
+                budgetHack: 'Repurpose existing hemp wick spools to craft custom heat-proof handles for pennies.',
+                materialCompatibility: ['borosilicate', 'clear_glass', 'ceramic']
+            },
+            {
+                id: 'mouthpiece-[smooth-file]',
+                category: 'mouthpiece',
+                title: 'Diamond File Glass Smoothing & Flame Polish',
+                subtitle: 'Safely smooth chipped or sharp mouthpiece glass rims',
+                materials: ['Diamond Grit Needle File or Wet/Dry Sandpaper (220 to 600 grit)', 'Water Source', 'Dust Mask'],
+                costEstimate: '$0 - $4',
+                timeEstimate: '15 Mins',
+                difficulty: 'Intermediate',
+                heatZone: 'Mouthpiece Area',
+                safetyRating: 'SAFE_AIRPATH',
+                description: 'Chipped mouthpieces can cut lips. Instead of discarding the piece, wet-sanding rounds down sharp glass fragments smoothly and safely.',
+                steps: [
+                    'Put on a dust mask to ensure zero glass micro-dust inhalation.',
+                    'Submerge the chipped mouthpiece rim in a shallow bowl of water or under a slow running faucet.',
+                    'Gently rub the diamond file or wet 220-grit sandpaper along the sharp glass edges in smooth circular strokes.',
+                    'Gradually transition to 400 and 600-grit sandpaper to polish the edge smooth to the touch.',
+                    'Thoroughly rinse the entire piece inside and out with warm water before use.'
+                ],
+                dosAndDonts: {
+                    dos: ['ALWAYS file under water to trap dangerous glass dust.', 'Wear eye protection and dust mask.'],
+                    donts: ['NEVER sand dry glass.', 'Do NOT apply glue or epoxy to the mouthpiece lip where mouth makes contact.']
+                },
+                budgetHack: 'Use a $2 diamond nail file from the drug store cosmetics aisle.',
+                materialCompatibility: ['borosilicate', 'clear_glass']
+            },
+            {
+                id: 'stuck-joint-thermal-release',
+                category: 'downstem',
+                title: 'Thermal Contrast Expansion Joint Release',
+                subtitle: 'Safely unstick frozen or resin-bonded downstems without breaking',
+                materials: ['Hot Tap Water / Hair Dryer', 'Ice Cube', 'Vegetable Oil / Coconut Oil', 'Wooden Spoon'],
+                costEstimate: '$0',
+                timeEstimate: '10 Mins',
+                difficulty: 'Easy',
+                heatZone: 'Joint Connection',
+                safetyRating: 'SAFE_AIRPATH',
+                description: 'Resin buildup and mineral deposits weld ground-glass joints together. Yanking breaks the piece. Thermal expansion easily separates them.',
+                steps: [
+                    'Drip a few drops of vegetable oil or alcohol around the frozen joint seam.',
+                    'Run warm/hot tap water over the OUTER joint wall (or warm briefly with hair dryer on low) to make outer glass expand.',
+                    'Simultaneously place an ice cube INSIDE the inner downstem tube to contract the inner glass.',
+                    'Gently tap the joint rim with the soft wooden handle of a spoon in a circular motion.',
+                    'Gently twist and lift the downstem free.'
+                ],
+                dosAndDonts: {
+                    dos: ['Use gentle circular tapping to vibrate resin loose.', 'Use warm water, not boiling water (prevents thermal shock crack).'],
+                    donts: ['NEVER use metal pliers or metal tools to pry glass.', 'Do NOT twist with extreme force.']
+                },
+                budgetHack: '$0 fix utilizing physics and thermal expansion.',
+                materialCompatibility: ['borosilicate', 'clear_glass']
+            }
+        ];
+
+        // HOUSEHOLD SAFETY MATRIX DATA
+        const SAFETY_MATRIX_DATA = [
+            {
+                name: 'Cyanoacrylate (Super Glue / Krazy Glue)',
+                rating: 'UNSAFE',
+                ratingLabel: 'NEVER IN HEAT ZONE',
+                maxTemp: '180°F (82°C)',
+                notes: 'Degrades under heat releasing toxic cyanide fumes and formaldehyde gases. OK only for external non-heat base decoration.'
+            },
+            {
+                name: '2-Part Epoxy Resin (Gorilla/JB Weld)',
+                rating: 'SAFE_EXTERIOR',
+                ratingLabel: 'EXTERIOR ONLY',
+                maxTemp: '300°F (148°C)',
+                notes: 'Excellent for glass base cracks & outer water chamber. Must cure 24hrs. Keep away from direct flame & smoke path.'
+            },
+            {
+                name: '100% Food-Grade Silicone Sealant',
+                rating: 'SAFE_AIRPATH',
+                ratingLabel: 'SAFE FOR AIRPATH / BASE',
+                maxTemp: '450°F (232°C)',
+                notes: 'Heat resistant and non-toxic when fully cured. Ideal for grommets, leaks, and joint sleeves.'
+            },
+            {
+                name: 'Beeswaxed Organic Hemp Wick',
+                rating: 'SAFE_AIRPATH',
+                ratingLabel: 'DIRECT HEAT SAFE',
+                maxTemp: '1000°F+ (Combustion Safe)',
+                notes: 'Natural organic fibers coated in beeswax. Perfect for handles, joint wraps, and screens.'
+            },
+            {
+                name: 'Plumber PTFE Tape (Teflon Tape)',
+                rating: 'SAFE_EXTERIOR',
+                ratingLabel: 'LOW HEAT / JOINTS ONLY',
+                maxTemp: '500°F (260°C)',
+                notes: 'Inert non-stick tape ideal for custom sealing loose downstems. Do not burn with direct lighter flame.'
+            },
+            {
+                name: 'Electrical Tape / Duct Tape',
+                rating: 'UNSAFE',
+                ratingLabel: 'NOT RECOMMENDED',
+                maxTemp: '170°F (76°C)',
+                notes: 'Glue dissolves in bong water creating messy, toxic chemical sludge. Outgasses under mild warmth.'
+            },
+            {
+                name: 'Aluminum Foil (Heavy Duty)',
+                rating: 'SAFE_EXTERIOR',
+                ratingLabel: 'EMERGENCY ONLY',
+                maxTemp: '1200°F (650°C)',
+                notes: 'Avoid using coated foil for bowl screens. Bare food-grade aluminum is safe for temporary emergency outer shields.'
+            },
+            {
+                name: 'Hot Glue Gun Sticks',
+                rating: 'UNSAFE',
+                ratingLabel: 'EXTREME CAUTION',
+                maxTemp: '140°F (60°C)',
+                notes: 'Melts quickly under warm water or smoke heat. Poor adhesion to glass; peels off easily.'
+            }
+        ];
+
+        // APP STATE
+        let activeCategory = 'downstem';
+        let savedRecipeIds = JSON.parse(localStorage.getItem('bongrx_saved') || '[]');
+
+        // INITIALIZATION
+        window.onload = function() {
+            renderSavedCount();
+            selectCategory('downstem');
+            renderSafetyMatrix(SAFETY_MATRIX_DATA);
+        };
+
+        // TAB SWITCHER LOGIC
+        function switchTab(tabId) {
+            document.querySelectorAll('section[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white', 'font-semibold');
+                btn.classList.add('text-slate-400');
+            });
+
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.add('bg-brand-600', 'text-white', 'font-semibold');
+            activeBtn.classList.remove('text-slate-400');
+
+            if(tabId === 'saved') {
+                renderSavedTab();
+            }
+        }
+
+        // CATEGORY SELECTION & REPAIR FILTERING
+        function selectCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.dataset.cat === cat) {
+                    btn.classList.add('border-brand-500', 'bg-brand-500/10', 'ring-1', 'ring-brand-500');
+                    btn.classList.remove('border-white/5', 'bg-slate-900/60');
+                } else {
+                    btn.classList.remove('border-brand-500', 'bg-brand-500/10', 'ring-1', 'ring-brand-500');
+                    btn.classList.add('border-white/5', 'bg-slate-900/60');
+                }
+            });
+
+            triggerDiagnosis();
+        }
+
+        function triggerDiagnosis() {
+            const material = document.getElementById('material-select').value;
+            const searchVal = document.getElementById('recipe-search').value.toLowerCase();
+
+            // Filter database based on selections
+            let results = REPAIR_DATABASE.filter(item => {
+                const matchCat = item.category === activeCategory;
+                const matchMaterial = item.materialCompatibility.includes(material);
+                const matchSearch = searchVal === '' || 
+                    item.title.toLowerCase().includes(searchVal) || 
+                    item.description.toLowerCase().includes(searchVal) ||
+                    item.materials.some(m => m.toLowerCase().includes(searchVal));
+
+                return matchCat && matchMaterial && matchSearch;
+            });
+
+            // Fallback if no exact material match
+            if(results.length === 0 && searchVal === '') {
+                results = REPAIR_DATABASE.filter(item => item.category === activeCategory);
+            }
+
+            renderResults(results);
+        }
+
+        function filterRecipesByKeyword() {
+            triggerDiagnosis();
+        }
+
+        // RENDER REPAIR CARDS
+        function renderResults(recipes) {
+            const container = document.getElementById('results-container');
+            
+            if(recipes.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-panel rounded-2xl p-8 text-center text-slate-400 space-y-3">
+                        <i class="fa-solid fa-circle-question text-3xl text-brand-400/50"></i>
+                        <h4 class="text-base font-bold text-white">No Direct DIY Match Found</h4>
+                        <p class="text-xs max-w-md mx-auto">Try selecting a different material or category, or check our Household Safety Matrix for custom material advice.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recipes.map(recipe => {
+                const isSaved = savedRecipeIds.includes(recipe.id);
+                
+                // Safety badge styling
+                let badgeStyle = 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30';
+                let badgeIcon = 'fa-shield-check';
+                if(recipe.safetyRating === 'SAFE_EXTERIOR') {
+                    badgeStyle = 'bg-amber-950/60 text-amber-300 border-amber-500/30';
+                    badgeIcon = 'fa-triangle-exclamation';
+                }
+
+                return `
+                    <div class="glass-panel-glow rounded-2xl p-6 border border-brand-500/30 space-y-5 relative transition-all">
+                        <!-- HEADER -->
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${badgeStyle} flex items-center gap-1">
+                                        <i class="fa-solid ${badgeIcon}"></i> ${recipe.heatZone}
+                                    </span>
+                                    <span class="text-xs text-brand-400 font-semibold bg-brand-500/10 border border-brand-500/20 px-2 py-0.5 rounded-md">
+                                        ${recipe.costEstimate} • ${recipe.timeEstimate}
+                                    </span>
+                                    <span class="text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md">
+                                        ${recipe.difficulty}
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white leading-tight">${recipe.title}</h3>
+                                <p class="text-xs text-slate-300 mt-1">${recipe.subtitle}</p>
+                            </div>
+                            <!-- ACTION BUTTONS -->
+                            <div class="flex items-center gap-2 shrink-0 no-print">
+                                <button onclick="toggleSaveRecipe('${recipe.id}')" class="p-2 rounded-xl border border-white/10 hover:border-brand-500/50 bg-slate-900/80 text-xs font-medium text-slate-300 hover:text-white transition-colors flex items-center gap-1.5">
+                                    <i class="${isSaved ? 'fa-solid text-brand-400' : 'fa-regular'} fa-bookmark"></i>
+                                    <span>${isSaved ? 'Saved' : 'Save'}</span>
+                                </button>
+                                <button onclick="window.print()" class="p-2 rounded-xl border border-white/10 hover:border-brand-500/50 bg-slate-900/80 text-xs font-medium text-slate-300 hover:text-white transition-colors">
+                                    <i class="fa-solid fa-print"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-300 leading-relaxed bg-slate-950/40 p-3 rounded-xl border border-white/5">
+                            ${recipe.description}
+                        </p>
+
+                        <!-- MATERIALS CHECKLIST -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-toolbox text-brand-400"></i> Required Materials Checklist
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                ${recipe.materials.map(m => `
+                                    <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-900/60 border border-white/5 text-xs text-slate-300 cursor-pointer hover:bg-slate-900">
+                                        <input type="checkbox" class="rounded border-slate-700 text-brand-500 focus:ring-brand-500 focus:ring-offset-slate-900">
+                                        <span>${m}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- STEP BY STEP INSTRUCTIONS -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-check text-brand-400"></i> Step-By-Step Repair Guide
+                            </h4>
+                            <ol class="space-y-2 text-xs text-slate-300">
+                                ${recipe.steps.map((step, idx) => `
+                                    <li class="flex items-start gap-2.5 bg-slate-900/40 p-2.5 rounded-xl border border-white/5">
+                                        <span class="w-5 h-5 rounded-full bg-brand-500/20 text-brand-400 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                                        <span class="leading-relaxed">${step}</span>
+                                    </li>
+                                `).join('')}
+                            </ol>
+                        </div>
+
+                        <!-- DO'S & DON'TS -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <div class="bg-emerald-950/20 border border-emerald-500/20 rounded-xl p-3 text-xs space-y-1.5">
+                                <strong class="text-emerald-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check"></i> Crucial Do's
+                                </strong>
+                                <ul class="list-disc list-inside text-emerald-200/80 space-y-1 text-[11px]">
+                                    ${recipe.dosAndDonts.dos.map(d => `<li>${d}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="bg-rose-950/20 border border-rose-500/20 rounded-xl p-3 text-xs space-y-1.5">
+                                <strong class="text-rose-400 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-xmark"></i> Dangerous Don'ts
+                                </strong>
+                                <ul class="list-disc list-inside text-rose-200/80 space-y-1 text-[11px]">
+                                    ${recipe.dosAndDonts.donts.map(d => `<li>${d}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- BUDGET HACK FOOTER -->
+                        <div class="bg-gradient-to-r from-brand-900/30 to-emerald-900/20 border border-brand-500/20 rounded-xl p-3 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0 text-sm">
+                                <i class="fa-solid fa-piggy-bank"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-wider font-bold text-brand-400 block">Hardware Hack vs Headshop Replacement</span>
+                                <p class="text-xs text-slate-200 font-medium">${recipe.budgetHack}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // SIMULATED FILE UPLOADER WITH IMAGE PROCESSING
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('upload-prompt').classList.add('hidden');
+                document.getElementById('upload-preview').classList.remove('hidden');
+                document.getElementById('preview-img').src = event.target.result;
+                document.getElementById('file-name-txt').innerText = file.name;
+
+                // Trigger scan animation
+                const scanner = document.getElementById('scanner-bar');
+                scanner.classList.remove('hidden');
+
+                setTimeout(() => {
+                    scanner.classList.add('hidden');
+                    // Auto select category based on file name or default intelligently
+                    const lowerName = file.name.toLowerCase();
+                    if(lowerName.includes('stem')) selectCategory('downstem');
+                    else if(lowerName.includes('bowl')) selectCategory('bowl');
+                    else if(lowerName.includes('base')) selectCategory('base');
+                    else triggerDiagnosis();
+                }, 1800);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetProfiler() {
+            document.getElementById('file-input').value = '';
+            document.getElementById('upload-prompt').classList.remove('hidden');
+            document.getElementById('upload-preview').classList.add('hidden');
+            document.getElementById('recipe-search').value = '';
+            document.getElementById('material-select').value = 'borosilicate';
+            document.getElementById('severity-select').value = 'hairline_crack';
+            selectCategory('downstem');
+        }
+
+        // SAFETY MATRIX RENDER & FILTER
+        function renderSafetyMatrix(data) {
+            const tbody = document.getElementById('safety-matrix-body');
+            tbody.innerHTML = data.map(item => {
+                let badgeClass = 'bg-rose-950/60 text-rose-300 border-rose-500/30';
+                if(item.rating === 'SAFE_AIRPATH') badgeClass = 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30';
+                if(item.rating === 'SAFE_EXTERIOR') badgeClass = 'bg-amber-950/60 text-amber-300 border-amber-500/30';
+
+                return `
+                    <tr class="hover:bg-slate-900/50 transition-colors">
+                        <td class="p-4 font-semibold text-white">${item.name}</td>
+                        <td class="p-4">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border uppercase tracking-wider ${badgeClass}">
+                                ${item.ratingLabel}
+                            </span>
+                        </td>
+                        <td class="p-4 text-slate-300 font-mono text-[11px]">${item.maxTemp}</td>
+                        <td class="p-4 text-slate-400 max-w-xs leading-relaxed">${item.notes}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterSafetyMatrix() {
+            const q = document.getElementById('safety-search').value.toLowerCase();
+            const filtered = SAFETY_MATRIX_DATA.filter(item => 
+                item.name.toLowerCase().includes(q) || 
+                item.notes.toLowerCase().includes(q) ||
+                item.ratingLabel.toLowerCase().includes(q)
+            );
+            renderSafetyMatrix(filtered);
+        }
+
+        // SAVED RECIPES MANAGEMENT
+        function toggleSaveRecipe(id) {
+            if(savedRecipeIds.includes(id)) {
+                savedRecipeIds = savedRecipeIds.filter(item => item !== id);
+            } else {
+                savedRecipeIds.push(id);
+            }
+            localStorage.setItem('bongrx_saved', JSON.stringify(savedRecipeIds));
+            renderSavedCount();
+            triggerDiagnosis();
+        }
+
+        function renderSavedCount() {
+            document.getElementById('saved-count').innerText = savedRecipeIds.length;
+        }
+
+        function renderSavedTab() {
+            const container = document.getElementById('saved-recipes-list');
+            const clearBtn = document.getElementById('clear-all-saved-btn');
+
+            if(savedRecipeIds.length === 0) {
+                clearBtn.classList.add('hidden');
+                container.innerHTML = `
+                    <div class="glass-panel rounded-2xl p-12 text-center text-slate-400 space-y-3">
+                        <i class="fa-regular fa-bookmark text-4xl text-slate-600"></i>
+                        <h3 class="text-base font-bold text-white">No Saved DIY Recipes Yet</h3>
+                        <p class="text-xs max-w-sm mx-auto">Browse the Repair Clinic and click the save button on any recipe to keep it handy for offline use.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            clearBtn.classList.remove('hidden');
+            const savedItems = REPAIR_DATABASE.filter(r => savedRecipeIds.includes(r.id));
+            
+            // Temporary render using same engine
+            const tempDiv = document.createElement('div');
+            tempDiv.className = 'space-y-6';
+            renderResults(savedItems);
+            container.innerHTML = document.getElementById('results-container').innerHTML;
+            triggerDiagnosis(); // Reset main tab view state
+        }
+
+        function clearSavedRecipes() {
+            if(confirm("Are you sure you want to remove all saved repair recipes?")) {
+                savedRecipeIds = [];
+                localStorage.setItem('bongrx_saved', JSON.stringify([]));
+                renderSavedCount();
+                renderSavedTab();
+            }
+        }
+    </script>
+</body>
+</html>
